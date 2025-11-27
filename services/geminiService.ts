@@ -89,10 +89,14 @@ export const classifyContent = async (
       }
     });
 
-    // Robust JSON parsing
+    // Robust JSON parsing: Find the first '{' and last '}'
     let jsonStr = response.text || "{}";
-    // Clean markdown code blocks if present
-    jsonStr = jsonStr.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+    const firstBrace = jsonStr.indexOf('{');
+    const lastBrace = jsonStr.lastIndexOf('}');
+    
+    if (firstBrace !== -1 && lastBrace !== -1) {
+        jsonStr = jsonStr.substring(firstBrace, lastBrace + 1);
+    }
     
     const result = JSON.parse(jsonStr);
     
